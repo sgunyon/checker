@@ -1,0 +1,44 @@
+Operation{time=1, module=topology, type=ok, action={0, 3}}
+Operation{time=2, module=write, type=ok, action={'ALL', 'a', 0}}
+Operation{time=3, module=write, type=ok, action={'ONE', 'b', 0}}
+Operation{time=4, module=write, type=ok, action={'QUORUM', 'c', 0}}
+Operation{time=5, module=write, type=ok, action={'QUORUM', 'd', 0}}
+
+Operation{time=7, module=read, type=ok, action={'ONE', 'a', 0}}
+Operation{time=8, module=read, type=ok, action={'ONE', 'b', 0}}
+Operation{time=9, module=read, type=ok, action={'ONE', 'c', 0}}
+Operation{time=10, module=read, type=ok, action={'ONE', 'd', 0}}
+Operation{time=11, module=read, type=ok, action={'ONE', 'e', 0}}
+
+Operation{time=12, module=live_nodes, type=ok, action={3, 2}}
+
+Operation{time=13, module=read, type=ok, action={'ONE', 'a', 0}}
+Operation{time=14, module=read, type=ok, action={'QUORUM', 'b', 0}}
+Operation{time=15, module=read, type=fail, action={'ALL', 'c'}}
+
+Operation{time=16, module=repair, type=fail}
+Operation{time=16, module=topology, type=ok, action={3, 10}}
+Operation{time=17, module=live_nodes, type=ok, action={9, 5}}
+
+Operation{time=18, module=write, type=fail, action={'ALL', 'a', 1}}
+Operation{time=18, module=read, type=ok, action={'ONE', 'a', 0}}
+Operation{time=19, module=write, type=ok, action={'ONE', 'b', 1}}
+Operation{time=19, module=read, type=ok, action={'ONE', 'b', 0}}
+Operation{time=20, module=write, type=fail, action={'QUORUM', 'c', 1}}
+Operation{time=20, module=read, type=ok, action={'ONE', 'b', 1}}
+Operation{time=20, module=repair, type=fail}
+
+Operation{time=30, module=topology, type=ok, action={10, 5}}
+Operation{time=38, module=read, type=ok, action={'ALL', 'e', 0}}
+Operation{time=39, module=write, type=ok, action={'ONE', 'e', 3}}
+Operation{time=39, module=read, type=ok, action={'ALL', 'e', 3}}
+Operation{time=40, module=write, type=ok, action={'QUORUM', 'e', 4}}
+Operation{time=40, module=read, type=ok, action={'QUORUM', 'e', 3}}
+Operation{time=40, module=repair, type=ok}
+Operation{time=55, module=live_nodes, type=fail, action={5, 2}}
+Operation{time=65, module=live_nodes, type=ok, action={5, 3}}
+Operation{time=67, module=read, type=ok, action={'ONE', 'a', 0}}
+Operation{time=68, module=read, type=ok, action={'QUORUM', 'b', 1}}
+Operation{time=69, module=read, type=ok, action={'QUORUM', 'c', 1}}
+Operation{time=70, module=read, type=ok, action={'QUORUM', 'd', 0}}
+Operation{time=71, module=read, type=fail, action={'ALL', 'e'}}

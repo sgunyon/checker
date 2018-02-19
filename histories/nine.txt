@@ -1,0 +1,20 @@
+Operation{time=1, module=topology, type=ok, action={0, 3}}
+Operation{time=2, module=write, type=ok, action={'ALL', 'a', 0}}
+Operation{time=3, module=write, type=ok, action={'ONE', 'b', 0}}
+Operation{time=4, module=write, type=ok, action={'QUORUM', 'c', 0}}
+Operation{time=5, module=write, type=ok, action={'QUORUM', 'd', 0}}
+Operation{time=6, module=write, type=ok, action={'ONE', 'e', 0}}
+
+Operation{time=7, module=read, type=ok, action={'ONE', 'a', 0}}
+Operation{time=8, module=read, type=ok, action={'ONE', 'b', 0}}
+Operation{time=9, module=read, type=ok, action={'ONE', 'c', 0}}
+Operation{time=10, module=read, type=ok, action={'ONE', 'd', 0}}
+Operation{time=11, module=read, type=ok, action={'ONE', 'e', 0}}
+
+Operation{time=12, module=topology, type=ok, action={3, 0}}
+
+Operation{time=13, module=write, type=ok, action={'ONE', 'a', 0}}
+Operation{time=14, module=write, type=ok, action={'QUORUM', 'b', 0}}
+Operation{time=15, module=write, type=fail, action={'ALL', 'c', 0}}
+
+Operation{time=16, module=repair, type=fail}

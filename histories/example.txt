@@ -1,0 +1,5 @@
+Operation{time=1, module=topology, type=ok, action={0, 3}}
+Operation{time=2, module=write, type=ok, action={'ALL', 'a', 0}}
+Operation{time=4, module=read, type=ok, action={'ALL', 'a', 0}}
+Operation{time=5, module=live_nodes, type=ok, action={3, 2}}
+Operation{time=10, module=repair, type=fail}

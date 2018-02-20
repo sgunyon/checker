@@ -9,10 +9,10 @@ ACTION = re.compile('action\={(.+?)\}')
 class Parser():
     def __init__(self):
         self.dict_format = {
-            'time' : "",
-            'module' : "",
-            'type' : "",
-            'action' : ""
+            'time' : '',
+            'module' : '',
+            'type' : '',
+            'action' : ''
         }
 
     def parse_data(self, data):

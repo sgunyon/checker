@@ -23,16 +23,20 @@ class Consistency():
         if module == 'write':
             self.update_write_list(action)
             if self.check_level(action):
-                self.output['consistency'] = 'Consistency check succeeded.'
+                 self.output['consistency'] = 'Consistency check succeeded.'
             else:
                 self.output['consistency'] = 'Consistency check failed.'
-            self.validate_logging()
+            self.output['logging'] = self.validate_logging(self.output['consistency'], log)
 
         if module == 'read':
-            self.output['consistency'] = self.validate_reads(action)
+            if self.check_level(action):
+                self.output['consistency'] = 'Consistency check succeeded.'
+                self.output['data validation'] = self.validate_reads(action)
+            else:
+                self.output['consistency'] = 'Consistency check failed.'
 
         if module == 'live_nodes':
-            self.output['node state'] = self.update_live_nodes(action[1])
+            self.output['live nodes'] = self.update_live_nodes(action[1])
 
         self.create_output(self.output)
 
@@ -46,7 +50,7 @@ class Consistency():
         if self.new_nodes > self.old_nodes and self.old_nodes > 0:
             self.live_nodes = self.live_nodes + (self.new_nodes - self.old_nodes)
 
-        return (self.old_nodes, self.new_nodes), self.live_nodes
+        return (self.old_nodes, self.new_nodes)
 
     def check_level(self, action):
         consistency_level = action[0]
@@ -60,20 +64,24 @@ class Consistency():
         return False
 
     def update_write_list(self, action):
-        self.write_list.append((action[1], action[2]))
+        return self.write_list.append((action[1], action[2]))
 
     def validate_reads(self, action):
         read = (action[1], action[2])
         if read in self.write_list:
-            return 'Consistency check succeeded', 'Found corresponding write.'
-        return 'Consistency check succeeded.', 'No correpsonding write.'
+            return 'Found corresponding write.'
+        return 'No correpsonding write.'
 
     def update_live_nodes(self, live_node_update):
         self.live_nodes = live_node_update
-        return (self.old_nodes, self.new_nodes), self.live_nodes
+        return self.live_nodes
 
-    def validate_logging(self):
-        self.output['logging'] = x
+    def validate_logging(self, consistency, log):
+        if consistency == 'Consistency check succeeded.' and log == 'ok':
+            return 'Logging confirmed'
+        if consistency == 'Consistency check failed.' and log == 'failed':
+            return 'Logging confirmed'
+        return 'Logging failed'
 
     def create_output(self, input):
         print(input)

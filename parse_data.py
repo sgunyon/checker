@@ -16,7 +16,7 @@ class Parser():
         }
 
     def parse_data(self, data):
-        if len(data) > 1 and not re.search('repair', data):
+        if re.search('Operation{', data) and not re.search('repair', data):
             self.time = TIME.search(data).group(1)
             self.module = MODULE.search(data).group(1)
             self.type = TYPE.search(data).group(1)

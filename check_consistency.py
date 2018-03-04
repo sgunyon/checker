@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 class Consistency():
     def __init__(self):
         self.write_list = []
@@ -12,17 +14,16 @@ class Consistency():
         log = dictionary['type']
         action = dictionary['action']
 
-        output = {
-            'time' : time,
-            'module' : module,
-        }
+        output = OrderedDict()
+        output['time'] = time
+        output['module'] = module
 
         if module == 'write':
             self.update_write_list(action)
             if self.check_level(action):
                 output['consistency'] = 'succeeded'
             else:
-                output['consistency'] = 'failed.'
+                output['consistency'] = 'failed'
             output['log validation'] = self.validate_logging(output['consistency'], log)
         elif module == 'read':
             if self.check_level(action):
@@ -30,6 +31,7 @@ class Consistency():
                 output['data validation'] = self.validate_reads(action)
             else:
                 output['consistency'] = 'failed'
+            output['log validation'] = self.validate_logging(output['consistency'], log)
         elif module == 'topology':
             if not log == 'fail':
                 output['cluster state'] = self.update_topology(action[0], action[1])
@@ -42,7 +44,8 @@ class Consistency():
             else:
                 output['report'] = 'operation failed'
 
-        print(output)
+        self.print_as_dict(output)
+
 
     def update_topology(self, old_node_update, new_node_update):
         self.nodes = old_node_update
@@ -83,8 +86,11 @@ class Consistency():
         return 'Live node count error'
 
     def validate_logging(self, consistency, log):
-        if consistency == 'succeeded.' and log == 'ok':
+        if consistency == 'succeeded' and log == 'ok':
             return 'valid'
         if consistency == 'failed' and log == 'fail':
             return 'valid'
         return 'invalid'
+
+    def print_as_dict(self, output):
+        print('{' + ', '.join(str(dict({x: y})).strip('{}') for x, y in output.items()) + '}')

@@ -12,7 +12,7 @@ main.py takes one argument, the history file.
 ### features
 
 - stores and updates cluster state (nodes and live nodes)
-- checks consistency levels of read and write operations
+- checks consistency of read and write operations
 - validates logging of write operations
 - validates data consistency of read operations
 
@@ -27,19 +27,34 @@ i created both objects outside of the loop to hold state, in this case the write
 
 inside the loop, the parse_data method parses the history file and returns a dictionary. regex seemed the most expedient way to parse the data in the history files. it also provided a convenient way to filter out noise. after parsing, the resulting dictionary is passed to the consistency method.
 
-each module-specific method inside of the Consistency class contains logic for evaluating the data. the consistency method acts as a dispatch to route the input, call module-specific methods, and return an output that is later printed. i strongly considered calling the consistency method 'route-put', as it both routes data to other methods, and outputs the final evaluation.
+each module-specific method inside of the Consistency class contains logic for evaluating the data. the consistency method acts as a dispatch to route input, call module-specific methods, and print the output. i strongly considered calling the consistency method 'route_put', as it both routes data to other methods, and outputs the final evaluation.
 
 ### output
 
-it is ugly. while processing each module's output from the history file, the consistency method populates an output dictionary. this dictionary is crudely printed to console. quick and dirty and dirty.
+it is ugly. while processing each module's output from the history file, the consistency method populates an output dictionary. i made this an ordered dictionary for my own sanity while testing. this dictionary is crudely printed to console. quick and dirty and dirty.
+
+all modules
+- time: included for organization and readability
+- module: included to track what data should be presented
+
+topology/live_node modules
+- cluster_state: only presets for topology modules, logs node count
+- live_nodes: presents for both topology and live_node modules. reflects live nodes available, going forward
+- report: presents only on topology or live_node modules that fail.
+
+read/write modules
+- consistency: presents on all reads and writes. compares consistency level requested with cluster state.
+- data validation: presents only on successful reads. confirms whether or not a read had previous been written (attempted or successful)
+- log validation: presents on all writes and successful reads, confirms whether a read or write, failing it's consistency level check, logs a failure
+
 
 ### strengths and weaknesses
 
 strengths
 
 - fairly intuitive
-- names reflect functionality (idiomatic)
-- runs in python2 and python3 (output format may vary)
+- names reflect functionality
+- runs in python2 and python3
 
 weaknesses
 
@@ -53,6 +68,6 @@ i estimate that i spent 20-30 total hours working on this. probably 15 of those 
 
 i'm new enough to programming that i knew what i wanted to do, but had to look up ways to do it. that is my general experience with most of my programming projects.
 
-i found myself rereading the gist for things i'd missed or overlooked. one example of that is the type operation documentation. toward the end it states that only the write module makes changes on fail. when initially creating the logic for read validation, i was only checking reads writes that succeeded. it wasn't until a at least my third read-through that i decided i needed to log all write attempts for read validation. at some point i considered only logging write attempts that happened when > 0 live nodes were available. i ended up just checking each read against every attempted write, which my have been too loose an interpretation. this my be a reflection of my reading comprehension, or how late in the evening i worked on this :)
+i found myself rereading the gist for things i'd missed or overlooked. one example of that is the type operation documentation. toward the end it states that only the write module (may) make changes on fail. when initially creating the logic for read validation, i was only checking against writes that succeeded. it wasn't until a at least my third read through that i decided i needed to log all write attempts for read validation. at some point i considered only logging write attempts that happened when > 0 live nodes were available. i ended up just checking each read against every attempted write, which might have been too loose an interpretation. this whole experience may be a reflection of my reading comprehension, or how late in the evening i worked on this :)
 
-overall i learned a lot doing this exercise. it was good practice for using classes to manage state, which i'm getting better at. it also provided an opportunity to work with regular expressions, which i rarely do.
+overall i learned a lot doing this exercise. it was good practice for using classes to manage state, which i'm getting better at. it also provided an opportunity to work with regular expressions, which was also fun.

@@ -31,21 +31,21 @@ each module-specific method inside of the Consistency class contains logic for e
 
 ### output
 
-it is ugly. while processing each module's output from the history file, the consistency method populates an output dictionary. i made this an ordered dictionary for my own sanity while testing. this dictionary is crudely printed to console. quick and dirty and dirty.
+it is ugly. while processing each module's output from the history file, the consistency method populates an output dictionary. i made this an ordered dictionary for my own sanity while testing. this dictionary is crudely printed to console. here is a list of possible keys in the output dictionary:
 
-all modules
-- time: included for organization and readability
-- module: included to track what data should be presented
+###### all modules
+- <b>time:</b> included for organization and readability
+- <b>module:</b> included to track what data should be presented
 
-topology/live_node modules
-- cluster_state: only presets for topology modules, logs node count
-- live_nodes: presents for both topology and live_node modules. reflects live nodes available, going forward
-- report: presents only on topology or live_node modules that fail.
+###### topology/live_node modules
+- <b>cluster_state:</b> only presents for topology modules - logs node count (current, new)
+- <b>live_nodes:</b> presents for both topology and live_node modules - reflects live nodes available, going forward
+- <b>report:</b> presents only on topology or live_node modules that fail (operation failed)
 
-read/write modules
-- consistency: presents on all reads and writes. compares consistency level requested with cluster state.
-- data validation: presents only on successful reads. confirms whether or not a read had previous been written (attempted or successful)
-- log validation: presents on all writes and successful reads, confirms whether a read or write, failing it's consistency level check, logs a failure
+###### read/write modules
+- <b>consistency:</b> presents on all reads and writes - compares consistency level requested with cluster state (succeeded/failed)
+- <b>data validation:</b> presents only on successful reads - confirms whether or not a read had previous been written (valid/invalid)
+- <b>log validation:</b> presents on all writes and successful reads - confirms whether a read or write, failing it's consistency level check, logs a failure (valid/invalid)
 
 
 ### strengths and weaknesses
@@ -66,8 +66,8 @@ weaknesses
 
 i estimate that i spent 20-30 total hours working on this. probably 15 of those actually creating and confirming things worked and another 10-15 reimplementing things so they made more sense, or looked less messy, or were less embarrassing.
 
-i'm new enough to programming that i knew what i wanted to do, but had to look up ways to do it. that is my general experience with most of my programming projects.
+i'm fairly new to programming so while basically what i wanted to do, i still had to look up ways to do it. that is my general experience with most of my programming projects.
 
-i found myself rereading the gist for things i'd missed or overlooked. one example of that is the type operation documentation. toward the end it states that only the write module (may) make changes on fail. when initially creating the logic for read validation, i was only checking against writes that succeeded. it wasn't until a at least my third read through that i decided i needed to log all write attempts for read validation. at some point i considered only logging write attempts that happened when > 0 live nodes were available. i ended up just checking each read against every attempted write, which might have been too loose an interpretation. this whole experience may be a reflection of my reading comprehension, or how late in the evening i worked on this :)
+i found myself rereading the gist for things i'd missed or overlooked. one example of that is the type operation documentation. toward the end it states that only the write module (may) make changes on fail. when initially creating the logic for read validation, i was only checking against writes that succeeded. it wasn't until a at least my third read through that i decided i needed to log all write attempts for read validation. at some point i considered only logging write attempts that happened when > 0 live nodes were available. i ended up just checking each read against every attempted write, which might have been too loose an interpretation. this may be more a reflection of my reading comprehension than anything programming related, or possibly how late in the evening i worked on this :)
 
-overall i learned a lot doing this exercise. it was good practice for using classes to manage state, which i'm getting better at. it also provided an opportunity to work with regular expressions, which was also fun.
+overall i learned a lot doing this exercise. it was good practice for using classes to manage state, which i think i'm getting better at. it also provided an opportunity to work with regular expressions, which was pretty fun.

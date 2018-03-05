@@ -13,7 +13,7 @@ main.py takes one argument, the history file.
 
 - stores and updates cluster state (nodes and live nodes)
 - checks consistency of read and write operations
-- validates logging of write operations
+- validates logging of read and write operations
 - validates data consistency of read operations
 
 ### implementation
@@ -33,16 +33,16 @@ each module-specific method inside of the Consistency class contains logic for e
 
 it is ugly. while processing each module's output from the history file, the consistency method populates an output dictionary. i made this an ordered dictionary for my own sanity while testing. this dictionary is crudely printed to console. here is a list of possible keys in the output dictionary:
 
-###### all modules
+##### all modules
 - <b>time:</b> included for organization and readability
 - <b>module:</b> included to track what data should be presented
 
-###### topology/live_node modules
+##### topology/live_node modules
 - <b>cluster_state:</b> only presents for topology modules - logs node count (current, new)
 - <b>live_nodes:</b> presents for both topology and live_node modules - reflects live nodes available, going forward
 - <b>report:</b> presents only on topology or live_node modules that fail (operation failed)
 
-###### read/write modules
+##### read/write modules
 - <b>consistency:</b> presents on all reads and writes - compares consistency level requested with cluster state (succeeded/failed)
 - <b>data validation:</b> presents only on successful reads - confirms whether or not a read had previous been written (valid/invalid)
 - <b>log validation:</b> presents on all writes and successful reads - confirms whether a read or write, failing it's consistency level check, logs a failure (valid/invalid)
@@ -53,7 +53,7 @@ it is ugly. while processing each module's output from the history file, the con
 strengths
 
 - fairly intuitive
-- names reflect functionality
+- object names reflect functionality
 - runs in python2 and python3
 
 weaknesses
@@ -66,7 +66,7 @@ weaknesses
 
 i estimate that i spent 20-30 total hours working on this. probably 15 of those actually creating and confirming things worked and another 10-15 reimplementing things so they made more sense, or looked less messy, or were less embarrassing.
 
-i'm fairly new to programming so while basically what i wanted to do, i still had to look up ways to do it. that is my general experience with most of my programming projects.
+i'm fairly new to programming so while i knew basically what i wanted to do, i still had to look up the ways to do it. that is my general experience with most of my programming projects.
 
 i found myself rereading the gist for things i'd missed or overlooked. one example of that is the type operation documentation. toward the end it states that only the write module (may) make changes on fail. when initially creating the logic for read validation, i was only checking against writes that succeeded. it wasn't until a at least my third read through that i decided i needed to log all write attempts for read validation. at some point i considered only logging write attempts that happened when > 0 live nodes were available. i ended up just checking each read against every attempted write, which might have been too loose an interpretation. this may be more a reflection of my reading comprehension than anything programming related, or possibly how late in the evening i worked on this :)
 
